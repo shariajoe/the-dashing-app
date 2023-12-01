@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import './TableComponent.scss';
 import { UserRole } from '../../enums/UserRole';
 import config from '../../config/config';
-import { useNavigate } from 'react-router-dom';
 
 interface UserData {
   id: number;
@@ -11,6 +10,10 @@ interface UserData {
   email: string;
 }
 
+interface SortConfig {
+  key: keyof UserData;
+  direction: 'ascending' | 'descending';
+}
 interface TableComponentProps {
   role: UserRole | null;
   onLogout: () => void;
@@ -18,19 +21,13 @@ interface TableComponentProps {
 
 const TableComponent: React.FC<TableComponentProps> = ({ role, onLogout }) => {
   const [users, setUsers] = useState<UserData[]>([]);
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [sortConfig, setSortConfig] = useState<SortConfig>({ key: 'first_name', direction: 'ascending' });
 
   useEffect(() => {
     // Fetch users on component mount
     fetchUsers();
   }, []);
-
-  const filteredUsers = users.filter(user => 
-    user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    user.email.toLowerCase().includes(searchTerm.toLowerCase())
-  );
 
   const fetchUsers = async () => {
     try {
@@ -99,6 +96,48 @@ const TableComponent: React.FC<TableComponentProps> = ({ role, onLogout }) => {
     setSearchTerm(event.target.value);
   };
 
+  const handleSort = (key: keyof UserData) => {
+    let direction: 'ascending' | 'descending' = 'ascending';
+    if (sortConfig && sortConfig.key === key && sortConfig.direction === 'ascending') {
+      direction = 'descending';
+    }
+    setSortConfig({ key, direction });
+  };
+
+  //sort users when config changes
+  const sortedUsers = useMemo(() => {
+    let sortableUsers = [...users];
+    if (sortConfig !== null) {
+      sortableUsers.sort((a, b) => {
+        if (a[sortConfig.key] < b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? -1 : 1;
+        }
+        if (a[sortConfig.key] > b[sortConfig.key]) {
+          return sortConfig.direction === 'ascending' ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    return sortableUsers;
+  }, [users, sortConfig]);
+
+  //filter users when search term changes
+  const filteredAndSortedUsers = useMemo(() => {
+    return sortedUsers.filter(user =>
+      user.first_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.last_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      user.email.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [sortedUsers, searchTerm]);
+
+  //render sort arrow
+  const renderSortArrow = (key: keyof UserData) => {
+    if (!sortConfig || sortConfig.key !== key) {
+      return null;
+    }
+    return sortConfig.direction === 'ascending' ? ' ↑' : ' ↓';
+  };
+
   return (
     <div className="table-container">
       <div className="table-header">
@@ -123,13 +162,13 @@ const TableComponent: React.FC<TableComponentProps> = ({ role, onLogout }) => {
             <thead>
               <tr>
                 <th>Rank</th>
-                <th>Name</th>
-                <th>Points</th>
+                <th onClick={() => handleSort('first_name')}>Name {renderSortArrow('first_name')}</th>
+                <th onClick={() => handleSort('email')}>Email {renderSortArrow('email')}</th>
                 {role === UserRole.Editor && <th>Actions</th>}
               </tr>
             </thead>
             <tbody>
-              {filteredUsers.map((user, index) => (
+              {filteredAndSortedUsers.map((user, index) => (
                 <tr key={user.id}>
                   <td>{index + 1}</td>
                   <td>{user.first_name} {user.last_name}</td>
