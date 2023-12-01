@@ -31,13 +31,16 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ## Logging In
 
-Kindly use email address michael.lawson@reqres.in to gain access using the Editor Role
-Kindly use email address eve.holt@reqres.in to gain access using the Viewer Role
+Kindly use email address michael.lawson@reqres.in to gain access using the Editor Role.
+
+Kindly use email address eve.holt@reqres.in to gain access using the Viewer Role.
+
 Use any password as long as it fits the set test criteria a minimum of 8 characters with at least 1
 uppercase letter, 1 lowercase letter, and 1 special character.
 
 ## API 
 I have use the public [Reqres](https://reqres.in/) api to try simulate api calls.
-Actual modifications have been mimicked in code to show the CRUD process
+
+Actual modifications have been mimicked in code to show the CRUD process.
 
 
