@@ -135,13 +135,17 @@ const TableComponent: React.FC<TableComponentProps> = ({ role, onLogout }) => {
     if (!sortConfig || sortConfig.key !== key) {
       return null;
     }
-    return sortConfig.direction === 'ascending' ? ' ↑' : ' ↓';
+    return (
+      <span role="img" aria-label={sortConfig.direction}>
+        {sortConfig.direction === 'ascending' ? ' ↑' : ' ↓'}
+      </span>
+    );
   };
 
   return (
     <div className="table-container">
       <div className="table-header">
-        <h1>Dashing App Users</h1>
+        <h1 id="table-heading">Dashing App Users</h1>
         <button onClick={onLogout} className="logout-button">Logout</button>
       </div>
       <div className='table-inner-container'>
@@ -158,12 +162,12 @@ const TableComponent: React.FC<TableComponentProps> = ({ role, onLogout }) => {
             )}
           </div>
           
-          <table className="data-table">
+          <table className="data-table" aria-labelledby="table-heading">
             <thead>
               <tr>
                 <th>Rank</th>
-                <th onClick={() => handleSort('first_name')}>Name {renderSortArrow('first_name')}</th>
-                <th onClick={() => handleSort('email')}>Email {renderSortArrow('email')}</th>
+                <th tabIndex={0} onClick={() => handleSort('first_name')}>Name {renderSortArrow('first_name')}</th>
+                <th tabIndex={0} onClick={() => handleSort('email')}>Email {renderSortArrow('email')}</th>
                 {role === UserRole.Editor && <th>Actions</th>}
               </tr>
             </thead>

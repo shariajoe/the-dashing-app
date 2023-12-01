@@ -1,11 +1,11 @@
 $background-gradient-start: #68BBE3;
 $background-gradient-end: #003060;
 $background-silhouette: '../../assets/images/silhouette.jpg';
-$delete-btn-color: red;
+$delete-btn-color: #e50000;
 $header-color: #003060;
 $button-color: #055C9D;
 $table-header-bg-color: #003060;
-$logout-button-bg-color: #68BBE3;
+$logout-button-bg-color: #427993;
 
 .table-container {
     background: linear-gradient(to right, rgba($background-gradient-start, 0.5), rgba($background-gradient-end, 0.5)), url($background-silhouette) no-repeat center center fixed;

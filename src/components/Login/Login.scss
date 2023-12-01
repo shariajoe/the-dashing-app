@@ -9,7 +9,7 @@ $button-color: #055C9D;
     background: linear-gradient(to right, rgba($background-gradient-start, 0.5), rgba($background-gradient-end, 0.5)), url($background-silhouette) no-repeat center center fixed;
     background-size: cover;
     height: 100vh;
-    padding: 20px;
+    padding: 0 20px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -21,8 +21,9 @@ $button-color: #055C9D;
     backdrop-filter: blur(10px);
     padding: 2rem;
     border-radius: 10px;
-    width: 90%;
+    width: calc(100% - 40px);
     max-width: 400px;
+    margin: 0 auto;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     animation: fadeIn 0.5s ease-in-out;
 }
@@ -119,6 +120,7 @@ $button-color: #055C9D;
     .login-page {
         .login-container {
             padding: 1.5rem;
+            max-width: 250px;
         }
     }
 }
